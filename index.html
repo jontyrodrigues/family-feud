@@ -17,7 +17,8 @@
     <div id="confetti-container">
   <section class="container">
      <div class=topContainer> 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Logo_of_Family_Feud.png" alt="logo" class="logo" /> 
+      <h1 class="title is-1" style="color: azure; text-align: center;"> Chemistry Feud </h1>
+    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Logo_of_Family_Feud.png" alt="logo" class="logo" />  -->
       <div class=innerContainer>
         <button class="button topButton questionButton hoverChange is-info is-dark is-medium" onclick="submit()">New
           Question </button>
@@ -29,14 +30,26 @@
       </div>
     </div>
   </section>
+  <input id="guess" class="input is-primary is-large" type="text" name="language"
+        placeholder="Type your guess here!" />
+        <script>
+          document.getElementById("guess").addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              document.getElementById("submitButton").click();
+            }
+          });
+    </script>
+    <!-- create a hidden submit button -->
+    <button id="submitButton" class="button is-primary is-large hidden" onclick="team()">Submit</button>
   <br>
   <section class=" container">
     <div class="board-item">
       <div class="questionBox board-item-content"><span> Click the New Question button to play!</span</div>
       </div>
   </section>
-  <div class="horizontalPosition"> 
-  <section class="timerArea">
+  <div> 
+  <!-- <section class="timerArea">
     <div class="btnGroup">
       <span>
         <span class="timer">
@@ -46,12 +59,12 @@
         </span>
       </span>
     </div>
-  </section>
-  <section class="container  answerArea">
-    <div class="level-item ">
+  </section> -->
+  <section>
+    <div style="margin-left: 5%">
       <div class="columns is-multiline is-centered cards-container" id="sectioncontainer">
-        <div class="column is-narrow">
-          <article class="message is-info is-dark answerCards">
+        <div class="column">
+          <article class="answerCards" id="createaccordingtoanswers">
             <div class="board-item">
               <div class="board-item-content" id="box"><span class="hidden answer" id="0"> Answer 1 </span> </div>
             </div>
@@ -64,34 +77,12 @@
             <div class="board-item">
               <div class="board-item-content" id="box"><span class="hidden answer" id="3">Answer 4</span></div>
             </div>
-            <div class="board-item">
-              <div class="board-item-content" id="box"><span class="hidden answer" id="4">Answer 5</span></div>
-            </div>
-            <div class="board-item">
-              <div class="board-item-content" id="box"><span class="hidden answer" id="5">Answer 6</span></div>
-            </div>
-            <div class="board-item">
-              <div class="board-item-content" id="box"><span class="hidden answer" id="6">Answer 7</span></div>
-            </div>
-            <div class="board-item">
-              <div class="board-item-content" id="box"><span class="hidden answer" id="7">Answer 8</span></div>
-            </div>
           </article>
         </div>
       </div>
   </section>
 </div> 
 <br>
-<div class="horizontalPosition">
-  <section class="hero ">
-    <input id="guess" class="input is-primary is-large" type="text" name="language"
-      placeholder="Type your guess here!" />
-  </section>
-  <br>
-  <section>
-    <button id="submitButton" class="button is-info is-light"  onclick="team()"> Submit Guess </button>
-  </section>
-</div>
   <h3 id="incorrectAnswerResponse" class="hidden"> Your guess is incorrect </h3>
 <br>
 
@@ -100,10 +91,10 @@
 
     <footer class="footer">
       <br>
-      <p> Template Created by <a href="https://bulmatemplates.github.io/bulma-templates/templates/kanban.html"> Bulma
-        </a> </p>
-      <p> Questions Inspired by <a href="https://github.com/ChicagoBlend/Family-Feud/blob/master/feud.json"> GitHub </a>
-      </p>
+      <div class="content has-text-centered">
+        <p>
+          <strong>Chemistry Feud</strong> Thanks to  <a href="https://github.com/ranadubauskas/family-feud">Rana Dubauskas</a> for the original code!
+        </p>
       <br>
     </footer>
     <script src="./script.js" defer></script> 

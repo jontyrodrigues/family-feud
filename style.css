@@ -138,7 +138,7 @@ background-image: linear-gradient(to bottom, #f5c6b4, #f6c0a9, #f6ba9d, #f5b590,
 
 .answerCards {
    display: grid;
-   grid-template-columns: 1fr 1fr;
+   grid-template-columns: 1fr 1fr 1fr 1fr;
  }
 
 .hidden {
@@ -153,11 +153,16 @@ background-image: linear-gradient(to bottom, #f5c6b4, #f6c0a9, #f6ba9d, #f5b590,
 
 #box{
    width: 300px;
-  height: 100px;
+  height: 70px;
 }
 
+/* center this item */
 #guess{
-  margin-left: 200%;
+  margin-left: 20%;
+  margin-top: 1%;
+  font-size: 20px;
+  width: 50%;
+  font-family: 'Playfair Display', serif;
 }
 
 #incorrectAnswerResponse{

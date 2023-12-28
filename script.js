@@ -12,57 +12,16 @@ let newQuestionButton = document.querySelector(".questionButton");
 let submitButton = document.querySelector("#submitButton");
 let endGameButton=document.querySelector(".endGame");
 
-let questionBank = [
-  {
-    "question": "Where do you want the next office holiday party to be?",
-    "answers": ["Hotel", "Somewhere with a view", "Somewhere warm", "On a boat", "Museum or park space", "Somewhere cheap", "Brewery", "Somewhere in Europe"],
-    "points": [19, 19, 17, 15, 10, 8, 6, 6]
-  },
-  {
-    "question": "Name a personality trait you hope people mention when talking about you",
-    "answers": ["Kind", "Friendly", "Funny", "Honest", "Nice", "Awesome", "Smart", "Trustworthy"],
-    "points": [22, 15, 15, 12, 12, 8, 8, 8]
-  },
-  {
-    "question": "What’s your favorite board game?",
-    "answers": ["Monopoly", "Scrabble", "Risk", "Clue", "Trivial Pursuit", "Settlers of Catan", "Cards Against Humanity", "Scattergories"],
-    "points": [26, 20, 15, 13, 7, 7, 7, 5]
-  },
-  {
-    "question": "What snack do you always keep at your desk?",
-    "answers": ["Chocolate", "Almonds", "Candy", "Fruit", "Booze", "Cookies", "Food Bar"],
-    "points": [20, 20, 15, 15, 11, 10, 9]
-  },
-  {
-    "question": "What is one thing you avoid when taking public transit?",
-    "answers": ["People", "Strange Smells", "Touching Things", "Wet/Sticky Seats", "Urine", "Eye Contact", "Bums", "Standing"],
-    "points": [27, 20, 17, 8, 7, 7, 7, 7]
-  },
-  {
-    "question": "What is the best neighborhood in Chicago?",
-    "answers": ["Wicker Park", "Logan Square", "Lincoln Park", "River North", "Old Town", "Lakeview", "West Loop", "Andersonville"],
-    "points": [21, 19, 17, 15, 15, 13]
-  },
-  {
-    "question": "What's the first app you use when you wake up?",
-    "answers": ["Email", "Weather", "News/Magazine/ESPN", "Instagram", "Facebook", "Reddit", "Alarm"],
-    "points": [28, 19, 17, 13, 13, 6, 4]
-  },
-  {
-    "question": "Name the chore that you dread the most",
-    "answers": ["Laundry", "Dishes", "Cleaning Bathroom", "Taking out the Trash", "Work Duties", "Cleaning Dog Poop"],
-    "points": [28, 26, 17, 10, 10, 9]
-  },
-  {
-    "question": "What's the worst thing to realize that you left home without?",
-    "answers": ["Phone", "Keys", "Wallet", "Pants", "Computer", "Transit Pass", "Headphones", "Deodorant"],
-    "points": [42, 14, 12, 8, 8, 6, 5, 5]
-  },
-  {
-    "question": "What's your favorite playground equipment?",
-    "answers": ["Swing", "Monkey Bars", "Slide", "Merry-go-round", "A Ball"],
-    "points": [56, 17, 16, 5, 5]
-  }];
+// read the question bank from a json file
+
+let questionBank = [];
+
+fetch("questionBank.json")
+  .then((response) => response.json())
+  .then((data) => {
+    questionBank = data;
+  });
+
 
 let team1Points = 0;
 let team2Points = 0;
@@ -75,36 +34,66 @@ function updateBoard() {
   guessesBox.innerHTML = `Guesses Left: ${guessesLeft}`;
 }
 
-let answers = document.querySelectorAll(".answer");
+
 
 //function to start timer:
 function countdown() {
-        var seconds = 59;
-        function tick() {
-          var counter = document.getElementById("counter");
-          seconds--;
-          counter.innerHTML =
-            "Time left: <br> 0:" + (seconds < 10 ? "0" : "") + String(seconds);
-          if (seconds > 0) {
-            setTimeout(tick, 1000);
-          } else {
-            document.getElementById("counter").innerHTML = "";
-          }
-        }
-        tick();
+        // var seconds = 59;
+        // function tick() {
+        //   var counter = document.getElementById("counter");
+        //   seconds--;
+        //   counter.innerHTML =
+        //     "Time left: <br> 0:" + (seconds < 10 ? "0" : "") + String(seconds);
+        //   if (seconds > 0) {
+        //     setTimeout(tick, 1000);
+        //   } else {
+        //     document.getElementById("counter").innerHTML = "";
+        //   }
+        // }
+        // tick();
       }
 
 
+let answers = "";
 
 //GETTING A RANDOM QUESTION CODE
+let questionsDone = [];
 let randomNum = 0;
 newQuestionButton.addEventListener("click", () => {
-  randomNum = Math.floor(Math.random() * 11);
+  // we generate a random number between 0 and the length of the question bank
+  while (questionsDone.includes(randomNum)) {
+    randomNum = Math.floor(Math.random() * questionBank.length);
+    if (questionsDone.length === questionBank.length) {
+      // remve the new question button
+      newQuestionButton.classList.add("hidden");
+      // alert the user that there are no more questions
+      alert("You have done all the questions!");
+      break;
+    }
+  }
+  questionsDone.push(randomNum);
+  // randomNum = Math.floor(Math.random() * questionBank.length);
   questionBox.innerHTML = questionBank[randomNum].question;
   incorrectAnswerResponse.classList.add("hidden");
   countdown();
   roundPoints  = 0;
   guessesLeft = 3;
+  // we build the answers grid according to the number of answers in the question bank
+  answersGrid = document.getElementById("createaccordingtoanswers");
+  // we empty the answers grid
+  answersGrid.innerHTML = "";
+  // we loop through the answers array of the question bank
+  for (let i = 0; i < questionBank[randomNum].answers.length; i++) {
+    // we create a new div element
+    let newDiv = document.createElement("div");
+    // add a class to the div element
+    newDiv.classList.add("board-item");
+    // then we append <div class="board-item-content" id="box"><span class="hidden answer" id="0"> Answer 1 </span> </div>
+    // to the new div element
+    newDiv.innerHTML = `<div class="board-item-content" id="box"><span class="hidden answer" id="${i}"> Answer ${i} </span> </div>`;
+    answersGrid.appendChild(newDiv);
+  }
+  answers = document.querySelectorAll(".answer");
   //add hidden to classlist of all answers
   answers.forEach((answer) => {
     answer.classList.add("hidden");
@@ -126,7 +115,7 @@ function checkAnswer(guess){
           let answerNum = parseInt(answer.id);
           if(answerNum === i){
             answer.classList.remove("hidden");
-            answer.innerHTML = questionBank[randomNum].answers[i] + `<br> ${questionBank[randomNum].points[i]} points`; 
+            answer.innerHTML = questionBank[randomNum].answers[i] + `&nbsp ${questionBank[randomNum].points[i]} points`; 
           }
         })
         return true;
@@ -210,7 +199,14 @@ submitButton.addEventListener("click", (event) => {
 
 //SCORE UPDATE CODE
 team1ScoreBox.addEventListener("click", () => {
-  team1Points += roundPoints; 
+    team1Points += roundPoints; 
+  // once we add the points to the team, we reset the round points to 0
+     // then we reset the guesses left to 3
+     guessesLeft = 3;
+     // and we reset the round points to 0
+     roundPoints = 0;
+    //  then we update the timer to 60 seconds
+    countdown();
   updateBoard();
 });
  
@@ -219,6 +215,13 @@ team1ScoreBox.addEventListener("click", () => {
 
 team2ScoreBox.addEventListener("click", () => {
   team2Points += roundPoints;
+  // once we add the points to the team, we reset the round points to 0
+     // then we reset the guesses left to 3
+     guessesLeft = 3;
+     // and we reset the round points to 0
+     roundPoints = 0;
+    //  then we update the timer to 60 seconds
+    countdown();
   updateBoard();
 });
 
