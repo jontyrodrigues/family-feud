@@ -149,16 +149,20 @@ background-image: linear-gradient(to bottom, #f5c6b4, #f6c0a9, #f6ba9d, #f5b590,
   background-color: green;
 }
 
+.iframe{
+  margin-top: 1%;
+}
+
 
 
 #box{
    width: 300px;
-  height: 70px;
+   height: 70px;
 }
 
 /* center this item */
 #guess{
-  margin-left: 20%;
+  margin-left: 10%;
   margin-top: 1%;
   font-size: 20px;
   width: 50%;

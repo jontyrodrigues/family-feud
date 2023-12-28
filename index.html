@@ -12,6 +12,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+  <style>
+    .timer {
+        font-size: 40px;
+    }
+    .time-buttons button {
+        /* Button style goes here */
+    }
+
+    .timer-holder {
+      background-color: whitesmoke; 
+      padding-top: 2px; 
+      margin-top: 10px; 
+      padding-right: 12px; 
+      margin-left: 4px;
+      border-radius: 5px;
+    }
+</style>
+<!-- add bootstrap -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
 </head>
 <body>
     <div id="confetti-container">
@@ -22,7 +41,7 @@
       <div class=innerContainer>
         <button class="button topButton questionButton hoverChange is-info is-dark is-medium" onclick="submit()">New
           Question </button>
-        <div class=" button topButton team1 scoreButton hoverChange is-info is-dark  is-medium" onclick="points()"> Team 1 Total Score: 0 </div>
+        <div class="button topButton team1 scoreButton hoverChange is-info is-dark  is-medium" onclick="points()"> Team 1 Total Score: 0 </div>
         <div class=" button topButton team2 scoreButton hoverChange is-info is-dark is-medium" onclick="points()"> Team 2 Total Score: 0 </div>
         <div class="  button topButton roundScore scoreButton hoverChange is-info is-dark is-medium"> Round Score: 0 </div>
         <div class=" button topButton guessesLeft scoreButton hoverChange is-info is-dark is-medium"> Guesses Left: 3 </div>
@@ -30,6 +49,7 @@
       </div>
     </div>
   </section>
+  <div style="display: flex;">
   <input id="guess" class="input is-primary is-large" type="text" name="language"
         placeholder="Type your guess here!" />
         <script>
@@ -42,6 +62,123 @@
     </script>
     <!-- create a hidden submit button -->
     <button id="submitButton" class="button is-primary is-large hidden" onclick="team()">Submit</button>
+    <div style="display: inline;" >
+      <div class="text-center timer-holder">
+        <div class="timer">
+            <span class="minutes"> 02 </span> : <span class="seconds"> 00 </span>
+            <select class="btn btn-lg btn-default hidden" id="time-options">
+                <option value="0">Select Time</option>
+                <option value="10">10 Seconds</option>
+                <option value="30">30 Seconds</option>
+                <option value="60">1 Minute</option>
+                <option value="120" selected>2 Minutes</option>
+                <option value="300">5 Minutes</option>
+                <!-- Add more options as needed -->
+            </select>
+            <button class="button hoverChange is-info is-dark is-medium" data-action="start"> Start </button>
+            <button class="button hoverChange is-info is-dark is-medium" data-action="stop"> Stop </button>
+            <button class="button hoverChange is-info is-dark is-medium" data-action="pause"> Pause </button>
+            <script>
+              const selectTimeOptions = document.getElementById('time-options');
+              const btnStartElement = document.querySelector(' [data-action="start"]');
+              const btnStopElement = document.querySelector(' [data-action="stop"]');
+              const btnPauseElement = document.querySelector(' [data-action="pause"]');
+              const btnResetElement = document.querySelector(' [data-action="reset"]');
+              const minutes = document.querySelector('.minutes');
+              const seconds = document.querySelector('.seconds');
+              let timerTime = 120; // 5 minutes initially
+              let interval;
+              let isPaused = false;
+              let isAlreadyStarted = false;
+      
+              // add event listeners for keypresses
+
+              // if we focus on the input, we want to pause the timer
+              document.getElementById("guess").addEventListener("focus", function(event) {
+                pause();
+              });
+
+              // and if we unfocus, we want to start the timer again
+              document.getElementById("guess").addEventListener("blur", function(event) {
+                start();
+              });
+      
+              const start = () => {
+                if(!isAlreadyStarted){
+                  isAlreadyStarted = true;
+                  isPaused = false;
+                  interval = setInterval(decrementTimer, 1000);
+                }else{
+                  if(isPaused){
+                    isPaused = false;
+                    interval = setInterval(decrementTimer, 1000);
+                  }
+                }
+              }
+      
+              const stop = () => {
+                  isPaused = false;
+                  clearInterval(interval);
+                  // timerTime = 300; // Reset to 5 minutes
+                  timerTime = parseInt(selectTimeOptions.value);
+                  isAlreadyStarted = false;
+                  updateDisplay();
+              }
+      
+              const pause = () => {
+                  isPaused = true;
+                  clearInterval(interval);
+              }
+      
+              const reset = () => {
+                  isPaused = false;
+                  // timerTime = 300; // Reset to 5 minutes
+                  timerTime = parseInt(selectTimeOptions.value);
+                  updateDisplay();
+              }
+      
+              const pad = (number) => {
+                  return (number < 10) ? '0' + number : number;
+              }
+      
+              const decrementTimer = () => {
+                  if(timerTime == 0) {
+                      // play a sound
+                      sound = new Audio("alarm.wav");
+                      sound.play();
+                      isAlreadyStarted = false;
+                      clearInterval(interval);
+                  }
+                  if (timerTime > 0) {
+                      timerTime--;
+                      updateDisplay();
+                  } else {
+                      clearInterval(interval);
+                  }
+              }
+      
+              const updateDisplay = () => {
+                  const numberMinutes = Math.floor(timerTime / 60);
+                  const numberSeconds = timerTime % 60;
+                  minutes.innerText = pad(numberMinutes);
+                  seconds.innerText = pad(numberSeconds);
+              }
+      
+              selectTimeOptions.addEventListener('change', () => {
+                  // Optional: Update timerTime based on the selected option immediately
+                  timerTime = parseInt(selectTimeOptions.value);
+                  updateDisplay();
+              });
+      
+              btnStartElement.addEventListener('click', start);
+              btnStopElement.addEventListener('click', stop);
+              btnPauseElement.addEventListener('click', pause);
+              btnResetElement.addEventListener('click', reset);
+          </script>
+        </div>
+    </div>
+    </div>
+  </div>
   <br>
   <section class=" container">
     <div class="board-item">
@@ -85,10 +222,6 @@
 <br>
   <h3 id="incorrectAnswerResponse" class="hidden"> Your guess is incorrect </h3>
 <br>
-
-<br>
-
-
     <footer class="footer">
       <br>
       <div class="content has-text-centered">
